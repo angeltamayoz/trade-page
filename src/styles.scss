@@ -1,0 +1,39 @@
+:root {
+  --bg-color: #0e1621;
+  --card-color: #162330;
+  --border-color: #1e2d3d;
+  --text-color: #ffffff;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; // Prevenir scroll horizontal
+}
+
+.card, .widget-container, .tradingview-widget-container {
+  background-color: var(--card-color);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+  padding: 1rem;
+  border-radius: 10px;
+  color: var(--text-color);
+}
+
+a, .nav-link {
+  color: #a9c9ff;
+}
+a:hover {
+  color: #ffffff;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid var(--border-color);
+}
+.nav-tabs .nav-link.active {
+  background-color: var(--card-color);
+  border-color: var(--border-color) var(--border-color) transparent;
+}

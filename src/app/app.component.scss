@@ -1,0 +1,112 @@
+.container-fluid {
+  margin-top: 70px; // Espacio para el header fijo
+  height: calc(100vh - 70px);
+  padding: 0;
+}
+
+.row {
+  height: 100%;
+  margin: 0;
+}
+
+.col-auto {
+  padding: 0;
+  height: 100%;
+  overflow: hidden; // Evita que el margen negativo del sidebar cause problemas
+  transition: all 0.3s ease;
+}
+
+.col {
+  padding: 0;
+  height: 100%;
+}
+
+.main-content {
+  padding: 1.5rem;
+  background-color: var(--bg-color);
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 1.5rem; // Asegurar padding superior
+}
+
+// Overlay para móviles
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1025;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+// Fullscreen wrapper for landing and login pages
+.fullscreen-wrapper {
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+}
+
+// Landing wrapper (keeping existing functionality)
+.landing-wrapper {
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+}
+
+// Responsive design
+@media (max-width: 991.98px) {
+  .container-fluid {
+    margin-top: 70px;
+  }
+  
+  .col-auto {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    z-index: 1030;
+    height: calc(100vh - 70px);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .col-auto:not(.sidebar-hidden) {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .main-content {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .container-fluid {
+    margin-top: 60px;
+    height: calc(100vh - 60px);
+  }
+  
+  .col-auto {
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+  
+  .main-content {
+    padding: 0.5rem;
+  }
+}

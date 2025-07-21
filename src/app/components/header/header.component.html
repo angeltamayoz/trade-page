@@ -1,0 +1,35 @@
+<nav class="navbar navbar-dark bg-dark px-3">
+  <div class="d-flex align-items-center">
+    <button class="navbar-toggler d-lg-none me-3" 
+            type="button" 
+            (click)="toggleSidebar()"
+            aria-label="Toggle sidebar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-brand mb-0">DEMO <span class="text-success">615287</span></div>
+  </div>
+  
+  <div class="d-none d-md-flex gap-4 text-white small">
+    <div class="text-center">Balance<br><strong>$10,001.00 USD</strong></div>
+    <div class="text-center">Capital<br><strong>$10,001.00 USD</strong></div>
+    <div class="text-center">Fondos Libres<br><strong>$10,001.00 USD</strong></div>
+    <div class="text-center">Margen<br><strong>$0.00 USD</strong></div>
+    <div class="text-center">Beneficio<br><strong>$0.00 USD</strong></div>
+  </div>
+  
+  <!-- Versión móvil simplificada -->
+  <div class="d-md-none text-white small text-end">
+    <div>Balance: <strong>$10,001.00</strong></div>
+    <div>P&L: <strong class="text-success">$0.00</strong></div>
+  </div>
+
+  <!-- Botón Agregar Fondos -->
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-success btn-sm d-none d-md-block" routerLink="/add-funds">
+      <i class="fas fa-plus me-1"></i>Agregar Fondos
+    </button>
+    <button class="btn btn-success btn-sm d-md-none" routerLink="/add-funds">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+</nav>
