@@ -1,0 +1,63 @@
+<nav class="navbar navbar-dark bg-dark px-3">
+  <div class="d-flex align-items-center">
+    <button class="navbar-toggler d-lg-none me-3" 
+            type="button" 
+            (click)="toggleSidebar()"
+            aria-label="Toggle sidebar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-brand mb-0">DEMO <span class="text-success">615287</span></div>
+  </div>
+  
+  <div class="d-none d-md-flex gap-4 text-white small">
+    <div class="text-center">Balance<br><strong>$10,001.00 USD</strong></div>
+    <div class="text-center">Capital<br><strong>$10,001.00 USD</strong></div>
+    <div class="text-center">Fondos Libres<br><strong>$10,001.00 USD</strong></div>
+    <div class="text-center">Margen<br><strong>$0.00 USD</strong></div>
+    <div class="text-center">Beneficio<br><strong>$0.00 USD</strong></div>
+  </div>
+  
+  <!-- Versión móvil simplificada -->
+  <div class="d-md-none text-white small text-end">
+    <div>Balance: <strong>$10,001.00</strong></div>
+    <div>P&L: <strong class="text-success">$0.00</strong></div>
+  </div>
+
+  <!-- Botón Agregar Fondos -->
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-success btn-sm d-none d-md-block" routerLink="/add-funds">
+      <i class="fas fa-plus me-1"></i>Agregar Fondos
+    </button>
+    <button class="btn btn-success btn-sm d-md-none" routerLink="/add-funds">
+      <i class="fas fa-plus"></i>
+    </button>
+    
+    <div class="dropdown">
+      <button class="btn user-menu-btn btn-sm dropdown-toggle d-flex align-items-center gap-2" 
+              type="button" 
+              (click)="toggleUserMenu()"
+              [class.show]="showUserMenu">
+        <div class="user-avatar">{{ getUserInitials() }}</div>
+        <span class="d-none d-md-inline">{{ getUserDisplayName() }}</span>
+      </button>
+      
+      <div class="dropdown-menu dropdown-menu-end" [class.show]="showUserMenu">
+        <div class="dropdown-header">
+          <strong>{{ getUserDisplayName() }}</strong>
+          <div class="text-muted small">{{ currentUser?.email }}</div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" routerLink="/profile">
+          <i class="fas fa-user me-2"></i>Mi Perfil
+        </a>
+        <a class="dropdown-item" routerLink="/settings">
+          <i class="fas fa-cog me-2"></i>Configuración
+        </a>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item logout-btn" (click)="logout()">
+          <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

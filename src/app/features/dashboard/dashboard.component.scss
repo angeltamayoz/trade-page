@@ -1,0 +1,20 @@
+.dashboard-wrapper {
+  width: 100%;
+  min-height: 100%;
+}
+
+#ticker-tape {
+  height: 60px;
+  background-color: var(--card-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.row {
+  margin: 0;
+}
+
+.row > div {
+  padding: 0.5rem;
+}

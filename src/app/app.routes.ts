@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { LandingComponent } from './components/landing/landing.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { FinanzasComponent } from './components/finanzas/finanzas.component';
-import { OrdenesPendientesComponent } from './components/ordenes-pendientes/ordenes-pendientes.component';
-import { AddFundsComponent } from './components/add-funds/add-funds.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { SettingsComponent } from './components/settings/settings.component';
-import { AuthGuard, NoAuthGuard } from './guards/auth.guard';
+import { LandingComponent } from './features/landing/landing.component';
+import { LoginComponent } from './features/auth/login.component';
+import { RegisterComponent } from './features/auth/register.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { FinanzasComponent } from './features/trading/finanzas.component';
+import { OrdenesPendientesComponent } from './features/trading/ordenes-pendientes.component';
+import { AddFundsComponent } from './features/trading/add-funds.component';
+import { ProfileComponent } from './features/user/profile.component';
+import { SettingsComponent } from './features/user/settings.component';
+import { AuthGuard, NoAuthGuard } from './core/guards/auth.guard';
 
 export const appRoutes: Routes = [
   { path: '', component: LandingComponent },

@@ -1,0 +1,282 @@
+<div class="add-funds-container">
+  <!-- Header -->
+  <div class="payment-header">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col">
+          <h1 class="h3 mb-0">
+            <i class="fas fa-plus-circle me-2 text-success"></i>
+            Agregar Fondos
+          </h1>
+          <p class="text-muted mb-0">Deposita dinero en tu cuenta de trading</p>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-outline-secondary" routerLink="/dashboard">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-4" *ngIf="!showConfirmation">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        
+        <!-- Step 1: Select Amount -->
+        <div class="payment-card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <span class="step-number">1</span>
+              Selecciona el Monto
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3 mb-4">
+              <div class="col-6 col-md-4 col-lg-2" *ngFor="let amount of predefinedAmounts">
+                <button 
+                  type="button"
+                  class="btn amount-btn w-100"
+                  [class.active]="selectedAmount === amount"
+                  (click)="selectAmount(amount)">
+                  ${{amount | number}}
+                </button>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <label class="form-label">Monto Personalizado</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input 
+                    type="number" 
+                    class="form-control"
+                    formControlName="amount"
+                    min="10" 
+                    max="50000"
+                    placeholder="Ingresa el monto">
+                </div>
+                <small class="form-text text-muted">Mínimo: $10 - Máximo: $50,000</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Payment Method -->
+        <div class="payment-card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <span class="step-number">2</span>
+              Método de Pago
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6" *ngFor="let method of paymentMethods">
+                <div 
+                  class="payment-method"
+                  [class.active]="selectedMethod === method.id"
+                  (click)="selectPaymentMethod(method.id)">
+                  <div class="d-flex align-items-center">
+                    <i [class]="method.icon + ' fa-2x me-3'"></i>
+                    <div class="flex-grow-1">
+                      <h6 class="mb-1">{{method.name}}</h6>
+                      <small class="text-muted">Comisión: {{method.fee}}</small>
+                    </div>
+                    <i class="fas fa-check-circle text-success" *ngIf="selectedMethod === method.id"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Payment Details -->
+        <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+          <div class="payment-card mb-4" *ngIf="selectedMethod === 'card'">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <span class="step-number">3</span>
+                Detalles de la Tarjeta
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label">Número de Tarjeta</label>
+                  <input 
+                    type="text" 
+                    class="form-control"
+                    formControlName="cardNumber"
+                    placeholder="1234 5678 9012 3456"
+                    maxlength="19"
+                    (input)="formatCardNumber($event)"
+                    [class.is-invalid]="paymentForm.get('cardNumber')?.invalid && paymentForm.get('cardNumber')?.touched">
+                </div>
+                
+                <div class="col-md-6">
+                  <label class="form-label">Fecha de Vencimiento</label>
+                  <input 
+                    type="text" 
+                    class="form-control"
+                    formControlName="expiryDate"
+                    placeholder="MM/YY"
+                    maxlength="5"
+                    (input)="formatExpiryDate($event)"
+                    [class.is-invalid]="paymentForm.get('expiryDate')?.invalid && paymentForm.get('expiryDate')?.touched">
+                </div>
+                
+                <div class="col-md-6">
+                  <label class="form-label">CVV</label>
+                  <input 
+                    type="text" 
+                    class="form-control"
+                    formControlName="cvv"
+                    placeholder="123"
+                    maxlength="4"
+                    [class.is-invalid]="paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched">
+                </div>
+                
+                <div class="col-12">
+                  <label class="form-label">Nombre en la Tarjeta</label>
+                  <input 
+                    type="text" 
+                    class="form-control"
+                    formControlName="cardName"
+                    placeholder="Nombre como aparece en la tarjeta"
+                    [class.is-invalid]="paymentForm.get('cardName')?.invalid && paymentForm.get('cardName')?.touched">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alternative Payment Instructions -->
+          <div class="payment-card mb-4" *ngIf="selectedMethod !== 'card'">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <span class="step-number">3</span>
+                Instrucciones de Pago
+              </h5>
+            </div>
+            <div class="card-body">
+              <div *ngIf="selectedMethod === 'transfer'" class="text-center">
+                <i class="fas fa-university fa-3x text-primary mb-3"></i>
+                <h6>Transferencia Bancaria</h6>
+                <p class="text-muted">Los datos bancarios se proporcionarán en el siguiente paso</p>
+              </div>
+              
+              <div *ngIf="selectedMethod === 'paypal'" class="text-center">
+                <i class="fab fa-paypal fa-3x text-primary mb-3"></i>
+                <h6>Pago con PayPal</h6>
+                <p class="text-muted">Serás redirigido a PayPal para completar el pago</p>
+              </div>
+              
+              <div *ngIf="selectedMethod === 'crypto'" class="text-center">
+                <i class="fab fa-bitcoin fa-3x text-warning mb-3"></i>
+                <h6>Pago con Criptomonedas</h6>
+                <p class="text-muted">Aceptamos Bitcoin, Ethereum y otras criptomonedas principales</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="payment-card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <span class="step-number">4</span>
+                Resumen del Pago
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="summary-item">
+                    <span>Monto a Depositar:</span>
+                    <strong>${{(paymentForm.get('amount')?.value || 0) | number:'1.2-2'}}</strong>
+                  </div>
+                  <div class="summary-item">
+                    <span>Comisión por Transacción:</span>
+                    <strong>${{calculateFee() | number:'1.2-2'}}</strong>
+                  </div>
+                  <hr>
+                  <div class="summary-item total">
+                    <span>Total a Pagar:</span>
+                    <strong class="text-success">${{getTotalAmount() | number:'1.2-2'}}</strong>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="security-info">
+                    <i class="fas fa-shield-alt text-success me-2"></i>
+                    <small>Transacción 100% segura y encriptada</small>
+                  </div>
+                  <div class="security-info">
+                    <i class="fas fa-clock text-info me-2"></i>
+                    <small>Los fondos estarán disponibles en 1-3 días hábiles</small>
+                  </div>
+                  <div class="security-info">
+                    <i class="fas fa-headset text-primary me-2"></i>
+                    <small>Soporte 24/7 disponible</small>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-check mt-3">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  formControlName="acceptTerms"
+                  id="acceptTerms"
+                  [class.is-invalid]="paymentForm.get('acceptTerms')?.invalid && paymentForm.get('acceptTerms')?.touched">
+                <label class="form-check-label" for="acceptTerms">
+                  Acepto los <a href="#" class="text-primary">términos y condiciones</a> y la <a href="#" class="text-primary">política de privacidad</a>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button 
+              type="submit" 
+              class="btn btn-success btn-lg px-5"
+              [disabled]="paymentForm.invalid || isProcessing">
+              <span *ngIf="!isProcessing">
+                <i class="fas fa-credit-card me-2"></i>
+                Procesar Pago (${{getTotalAmount() | number:'1.2-2'}})
+              </span>
+              <span *ngIf="isProcessing">
+                <i class="fas fa-spinner fa-spin me-2"></i>
+                Procesando...
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Confirmation -->
+  <div class="container my-4" *ngIf="showConfirmation">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 text-center">
+        <div class="success-animation">
+          <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+          <h2 class="text-success mb-3">¡Pago Exitoso!</h2>
+          <p class="lead mb-4">
+            Tu depósito de <strong>${{(paymentForm.get('amount')?.value || 0) | number:'1.2-2'}}</strong> 
+            ha sido procesado exitosamente.
+          </p>
+          <p class="text-muted mb-4">
+            Los fondos estarán disponibles en tu cuenta en 1-3 días hábiles. 
+            Recibirás un email de confirmación en breve.
+          </p>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Serás redirigido al dashboard automáticamente...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { HeaderComponent } from './components/header/header.component';
+import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { HeaderComponent } from './layout/header/header.component';
 import { filter } from 'rxjs/operators';
 
 @Component({

@@ -1,0 +1,21 @@
+<div class="card bg-dark text-white p-3">
+  <ul class="nav nav-tabs mb-3" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="currentTab === 'calendar'" (click)="changeTab('calendar')">
+        🗓 Calendario
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="currentTab === 'news'" (click)="changeTab('news')">
+        📰 Noticias
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="currentTab === 'forex'" (click)="changeTab('forex')">
+        💱 Divisas
+      </a>
+    </li>
+  </ul>
+
+  <div id="widget-container"></div>
+</div>
