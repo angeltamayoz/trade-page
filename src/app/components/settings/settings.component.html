@@ -1,0 +1,355 @@
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white mb-0">Configuración</h2>
+        <button class="btn btn-outline-light" routerLink="/dashboard">
+          <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
+        </button>
+      </div>
+
+      <!-- Mensajes de estado globales -->
+      <div class="alert alert-success" *ngIf="successMessage" role="alert">
+        <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
+      </div>
+      <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ errorMessage }}
+      </div>
+
+      <div class="row">
+        <!-- Menú de navegación lateral -->
+        <div class="col-lg-3 mb-4">
+          <div class="list-group">
+            <a class="list-group-item list-group-item-action" 
+               [class.active]="activeTab === 'security'" 
+               (click)="setActiveTab('security')" 
+               style="cursor: pointer;">
+              <i class="fas fa-shield-alt me-2"></i>Seguridad
+            </a>
+            <a class="list-group-item list-group-item-action" 
+               [class.active]="activeTab === 'notifications'" 
+               (click)="setActiveTab('notifications')" 
+               style="cursor: pointer;">
+              <i class="fas fa-bell me-2"></i>Notificaciones
+            </a>
+            <a class="list-group-item list-group-item-action" 
+               [class.active]="activeTab === 'trading'" 
+               (click)="setActiveTab('trading')" 
+               style="cursor: pointer;">
+              <i class="fas fa-chart-line me-2"></i>Trading
+            </a>
+            <a class="list-group-item list-group-item-action" 
+               [class.active]="activeTab === 'account'" 
+               (click)="setActiveTab('account')" 
+               style="cursor: pointer;">
+              <i class="fas fa-user-cog me-2"></i>Cuenta
+            </a>
+          </div>
+        </div>
+
+        <!-- Contenido de configuración -->
+        <div class="col-lg-9">
+          <!-- Configuración de Seguridad -->
+          <div *ngIf="activeTab === 'security'">
+            <div class="card bg-dark border-secondary">
+              <div class="card-header">
+                <h5 class="text-white mb-0">
+                  <i class="fas fa-shield-alt me-2"></i>Configuración de Seguridad
+                </h5>
+              </div>
+              <div class="card-body">
+                <!-- Cambiar Contraseña -->
+                <div class="mb-4">
+                  <h6 class="text-white mb-3">Cambiar Contraseña</h6>
+                  <form [formGroup]="securityForm" (ngSubmit)="changePassword()">
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <label for="currentPassword" class="form-label text-white">Contraseña Actual</label>
+                        <input 
+                          type="password" 
+                          class="form-control" 
+                          id="currentPassword"
+                          formControlName="currentPassword"
+                          [class.is-invalid]="securityForm.get('currentPassword')?.invalid && securityForm.get('currentPassword')?.touched">
+                        <div class="invalid-feedback">
+                          {{ getErrorMessage('currentPassword', securityForm) }}
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label for="newPassword" class="form-label text-white">Nueva Contraseña</label>
+                        <input 
+                          type="password" 
+                          class="form-control" 
+                          id="newPassword"
+                          formControlName="newPassword"
+                          [class.is-invalid]="securityForm.get('newPassword')?.invalid && securityForm.get('newPassword')?.touched">
+                        <div class="invalid-feedback">
+                          {{ getErrorMessage('newPassword', securityForm) }}
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label for="confirmPassword" class="form-label text-white">Confirmar Contraseña</label>
+                        <input 
+                          type="password" 
+                          class="form-control" 
+                          id="confirmPassword"
+                          formControlName="confirmPassword"
+                          [class.is-invalid]="securityForm.get('confirmPassword')?.invalid && securityForm.get('confirmPassword')?.touched">
+                        <div class="invalid-feedback">
+                          {{ getErrorMessage('confirmPassword', securityForm) }}
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="securityForm.invalid || isLoading">
+                      <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+                      {{ isLoading ? 'Cambiando...' : 'Cambiar Contraseña' }}
+                    </button>
+                  </form>
+                </div>
+
+                <hr class="border-secondary">
+
+                <!-- Autenticación de Dos Factores -->
+                <div class="mb-4">
+                  <h6 class="text-white mb-3">Autenticación de Dos Factores</h6>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <p class="text-white mb-1">Protege tu cuenta con 2FA</p>
+                      <small class="text-muted">Añade una capa extra de seguridad</small>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        id="twoFactorSwitch"
+                        [checked]="settings.security.twoFactorEnabled"
+                        (change)="toggleTwoFactor()">
+                      <label class="form-check-label text-white" for="twoFactorSwitch">
+                        {{ settings.security.twoFactorEnabled ? 'Habilitado' : 'Deshabilitado' }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Notificaciones de Login -->
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input 
+                      class="form-check-input" 
+                      type="checkbox" 
+                      id="loginNotifications"
+                      [(ngModel)]="settings.security.loginNotifications">
+                    <label class="form-check-label text-white" for="loginNotifications">
+                      Notificar inicios de sesión sospechosos
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Configuración de Notificaciones -->
+          <div *ngIf="activeTab === 'notifications'">
+            <div class="card bg-dark border-secondary">
+              <div class="card-header">
+                <h5 class="text-white mb-0">
+                  <i class="fas fa-bell me-2"></i>Configuración de Notificaciones
+                </h5>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="notificationForm" (ngSubmit)="saveNotificationSettings()">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h6 class="text-white mb-3">Canales de Notificación</h6>
+                      
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="emailAlerts" formControlName="emailAlerts">
+                        <label class="form-check-label text-white" for="emailAlerts">
+                          <i class="fas fa-envelope me-2"></i>Alertas por Email
+                        </label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="smsAlerts" formControlName="smsAlerts">
+                        <label class="form-check-label text-white" for="smsAlerts">
+                          <i class="fas fa-sms me-2"></i>Alertas por SMS
+                        </label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="pushNotifications" formControlName="pushNotifications">
+                        <label class="form-check-label text-white" for="pushNotifications">
+                          <i class="fas fa-mobile-alt me-2"></i>Notificaciones Push
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <h6 class="text-white mb-3">Tipos de Notificación</h6>
+                      
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="tradingAlerts" formControlName="tradingAlerts">
+                        <label class="form-check-label text-white" for="tradingAlerts">
+                          <i class="fas fa-chart-line me-2"></i>Alertas de Trading
+                        </label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="marketNews" formControlName="marketNews">
+                        <label class="form-check-label text-white" for="marketNews">
+                          <i class="fas fa-newspaper me-2"></i>Noticias del Mercado
+                        </label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="accountUpdates" formControlName="accountUpdates">
+                        <label class="form-check-label text-white" for="accountUpdates">
+                          <i class="fas fa-user-circle me-2"></i>Actualizaciones de Cuenta
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-success mt-3" [disabled]="isLoading">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+                    {{ isLoading ? 'Guardando...' : 'Guardar Configuración' }}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Configuración de Trading -->
+          <div *ngIf="activeTab === 'trading'">
+            <div class="card bg-dark border-secondary">
+              <div class="card-header">
+                <h5 class="text-white mb-0">
+                  <i class="fas fa-chart-line me-2"></i>Configuración de Trading
+                </h5>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="tradingForm" (ngSubmit)="saveTradingSettings()">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="riskLevel" class="form-label text-white">Nivel de Riesgo</label>
+                      <select class="form-select" id="riskLevel" formControlName="riskLevel">
+                        <option value="low">Bajo</option>
+                        <option value="medium">Medio</option>
+                        <option value="high">Alto</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="defaultLeverage" class="form-label text-white">Apalancamiento por Defecto</label>
+                      <input 
+                        type="number" 
+                        class="form-control" 
+                        id="defaultLeverage"
+                        formControlName="defaultLeverage"
+                        min="1" 
+                        max="100"
+                        [class.is-invalid]="tradingForm.get('defaultLeverage')?.invalid && tradingForm.get('defaultLeverage')?.touched">
+                      <div class="invalid-feedback">
+                        {{ getErrorMessage('defaultLeverage', tradingForm) }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="stopLossPercent" class="form-label text-white">Stop Loss por Defecto (%)</label>
+                      <input 
+                        type="number" 
+                        class="form-control" 
+                        id="stopLossPercent"
+                        formControlName="stopLossPercent"
+                        min="1" 
+                        max="50"
+                        [class.is-invalid]="tradingForm.get('stopLossPercent')?.invalid && tradingForm.get('stopLossPercent')?.touched">
+                      <div class="invalid-feedback">
+                        {{ getErrorMessage('stopLossPercent', tradingForm) }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="takeProfitPercent" class="form-label text-white">Take Profit por Defecto (%)</label>
+                      <input 
+                        type="number" 
+                        class="form-control" 
+                        id="takeProfitPercent"
+                        formControlName="takeProfitPercent"
+                        min="1" 
+                        max="100"
+                        [class.is-invalid]="tradingForm.get('takeProfitPercent')?.invalid && tradingForm.get('takeProfitPercent')?.touched">
+                      <div class="invalid-feedback">
+                        {{ getErrorMessage('takeProfitPercent', tradingForm) }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="maxDailyLoss" class="form-label text-white">Pérdida Máxima Diaria ($)</label>
+                      <input 
+                        type="number" 
+                        class="form-control" 
+                        id="maxDailyLoss"
+                        formControlName="maxDailyLoss"
+                        min="10"
+                        [class.is-invalid]="tradingForm.get('maxDailyLoss')?.invalid && tradingForm.get('maxDailyLoss')?.touched">
+                      <div class="invalid-feedback">
+                        {{ getErrorMessage('maxDailyLoss', tradingForm) }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3 d-flex align-items-end">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="autoStop" formControlName="autoStop">
+                        <label class="form-check-label text-white" for="autoStop">
+                          Detener trading automáticamente al alcanzar límites
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-success" [disabled]="tradingForm.invalid || isLoading">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+                    {{ isLoading ? 'Guardando...' : 'Guardar Configuración' }}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Configuración de Cuenta -->
+          <div *ngIf="activeTab === 'account'">
+            <div class="card bg-dark border-secondary">
+              <div class="card-header">
+                <h5 class="text-white mb-0">
+                  <i class="fas fa-user-cog me-2"></i>Gestión de Cuenta
+                </h5>
+              </div>
+              <div class="card-body">
+                <!-- Exportar Datos -->
+                <div class="mb-4">
+                  <h6 class="text-white mb-3">Exportar Datos</h6>
+                  <p class="text-muted mb-3">Descarga una copia de todos tus datos de trading y cuenta.</p>
+                  <button class="btn btn-outline-info" (click)="exportData()">
+                    <i class="fas fa-download me-2"></i>Exportar Datos
+                  </button>
+                </div>
+
+                <hr class="border-secondary">
+
+                <!-- Eliminar Cuenta -->
+                <div class="mb-3">
+                  <h6 class="text-white mb-3 text-danger">Zona de Peligro</h6>
+                  <p class="text-muted mb-3">Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, ten certeza.</p>
+                  <button class="btn btn-outline-danger" (click)="deleteAccount()">
+                    <i class="fas fa-trash me-2"></i>Eliminar Cuenta
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,179 @@
+<div class="register-container">
+  <div class="register-wrapper">
+    <div class="register-header">
+      <button class="back-btn" (click)="goBack()" type="button">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h1 class="register-title">Crear Cuenta</h1>
+    </div>
+
+    <div class="register-form-container">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName" class="form-label">Nombre *</label>
+            <input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              class="form-control"
+              [class.is-invalid]="getErrorMessage('firstName')"
+              placeholder="Tu nombre"
+            >
+            <div class="invalid-feedback" *ngIf="getErrorMessage('firstName')">
+              {{ getErrorMessage('firstName') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName" class="form-label">Apellido *</label>
+            <input
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              class="form-control"
+              [class.is-invalid]="getErrorMessage('lastName')"
+              placeholder="Tu apellido"
+            >
+            <div class="invalid-feedback" *ngIf="getErrorMessage('lastName')">
+              {{ getErrorMessage('lastName') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">Email *</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            [class.is-invalid]="getErrorMessage('email')"
+            placeholder="tu@email.com"
+          >
+          <div class="invalid-feedback" *ngIf="getErrorMessage('email')">
+            {{ getErrorMessage('email') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone" class="form-label">Teléfono *</label>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            class="form-control"
+            [class.is-invalid]="getErrorMessage('phone')"
+            placeholder="+1234567890"
+          >
+          <div class="invalid-feedback" *ngIf="getErrorMessage('phone')">
+            {{ getErrorMessage('phone') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Contraseña *</label>
+          <div class="password-input-container">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              class="form-control"
+              [class.is-invalid]="getErrorMessage('password')"
+              placeholder="Mínimo 8 caracteres"
+            >
+            <button
+              type="button"
+              class="password-toggle-btn"
+              (click)="togglePasswordVisibility()"
+            >
+              <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback" *ngIf="getErrorMessage('password')">
+            {{ getErrorMessage('password') }}
+          </div>
+          <div class="password-requirements">
+            <small class="text-muted">
+              La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirmar Contraseña *</label>
+          <div class="password-input-container">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              class="form-control"
+              [class.is-invalid]="getErrorMessage('confirmPassword')"
+              placeholder="Repite tu contraseña"
+            >
+            <button
+              type="button"
+              class="password-toggle-btn"
+              (click)="toggleConfirmPasswordVisibility()"
+            >
+              <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback" *ngIf="getErrorMessage('confirmPassword')">
+            {{ getErrorMessage('confirmPassword') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              id="acceptTerms"
+              formControlName="acceptTerms"
+              class="form-check-input"
+              [class.is-invalid]="getErrorMessage('acceptTerms')"
+            >
+            <label for="acceptTerms" class="form-check-label">
+              Acepto los <a href="#" class="link-primary">términos y condiciones</a> y la 
+              <a href="#" class="link-primary">política de privacidad</a> *
+            </label>
+          </div>
+          <div class="invalid-feedback" *ngIf="getErrorMessage('acceptTerms')">
+            {{ getErrorMessage('acceptTerms') }}
+          </div>
+        </div>
+
+        <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+          <i class="fas fa-exclamation-circle me-2"></i>
+          {{ errorMessage }}
+        </div>
+
+        <div class="alert alert-success" *ngIf="successMessage" role="alert">
+          <i class="fas fa-check-circle me-2"></i>
+          {{ successMessage }}
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-register"
+          [disabled]="isLoading"
+          [class.loading]="isLoading"
+        >
+          <span *ngIf="!isLoading">Crear Cuenta</span>
+          <span *ngIf="isLoading" class="loading-content">
+            <i class="fas fa-spinner fa-spin me-2"></i>
+            Creando cuenta...
+          </span>
+        </button>
+
+        <div class="register-footer">
+          <p class="login-link">
+            ¿Ya tienes una cuenta? 
+            <a (click)="goToLogin()" class="link-primary cursor-pointer">Inicia sesión aquí</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

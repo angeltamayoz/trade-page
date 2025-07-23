@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   sidebarOpen = false;
   isLandingPage = false;
   isLoginPage = false;
+  isRegisterPage = false;
 
   constructor(private router: Router) {}
 
@@ -26,11 +27,13 @@ export class AppComponent implements OnInit {
       .subscribe((event: NavigationEnd) => {
         this.isLandingPage = event.url === '/' || event.url === '';
         this.isLoginPage = event.url === '/login';
+        this.isRegisterPage = event.url === '/register';
       });
 
     // Set initial state
     this.isLandingPage = this.router.url === '/' || this.router.url === '';
     this.isLoginPage = this.router.url === '/login';
+    this.isRegisterPage = this.router.url === '/register';
   }
 
   toggleSidebar() {
@@ -39,6 +42,6 @@ export class AppComponent implements OnInit {
 
   // Helper method to check if we should show navigation
   shouldShowNavigation(): boolean {
-    return !this.isLandingPage && !this.isLoginPage;
+    return !this.isLandingPage && !this.isLoginPage && !this.isRegisterPage;
   }
 }

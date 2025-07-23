@@ -22,28 +22,24 @@ interface TickerItem {
 })
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   
-  // Ticker data
   tickerData: TickerItem[] = [];
   private tickerInterval: any;
   
-  // Contact form data
   contactForm = {
     nombre: '',
     email: '',
     mensaje: ''
   };
 
-  // Navigation state
   isMobileMenuOpen = false;
 
-  // Slider data
   heroSlides = [
     {
       image: '/slide1.webp',
       title: 'Tomando el Trading con Dedicación, como Tú',
       subtitle: 'Únete a TradeEU Global y explora los mercados con confianza.',
       buttonText: 'Comienza a Operar Ahora',
-      buttonLink: '/login'
+      buttonLink: '/register'
     },
     {
       image: '/slide2.webp',
@@ -57,7 +53,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       title: 'Comisiones de Trading Cero',
       subtitle: 'Sin tarifas adicionales al operar. Transparencia total.',
       buttonText: 'Comienza a Operar Ahora',
-      buttonLink: '/login'
+      buttonLink: '/register'
     }
   ];
 

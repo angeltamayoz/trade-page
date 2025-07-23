@@ -5,13 +5,17 @@
   --text-color: #ffffff;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; // Prevenir scroll horizontal
 }
 
 .card, .widget-container, .tradingview-widget-container {

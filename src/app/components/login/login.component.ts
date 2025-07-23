@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService, LoginRequest } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -38,21 +40,26 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       this.errorMessage = '';
 
-      // Simular autenticación
-      setTimeout(() => {
-        const { email, password } = this.loginForm.value;
-        
-        // Simulación de validación simple
-        if (email === 'admin@tradeeu.com' && password === '123456') {
-          // Login exitoso
+      const loginData: LoginRequest = {
+        email: this.loginForm.value.email,
+        password: this.loginForm.value.password,
+        rememberMe: this.loginForm.value.rememberMe
+      };
+
+      this.authService.login(loginData).subscribe({
+        next: (response) => {
           this.isLoading = false;
-          this.router.navigate(['/dashboard']);
-        } else {
-          // Login fallido
+          if (response.success) {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.errorMessage = response.message || 'Credenciales incorrectas';
+          }
+        },
+        error: (error) => {
           this.isLoading = false;
-          this.errorMessage = 'Credenciales incorrectas. Intenta con: admin@tradeeu.com / 123456';
+          this.errorMessage = error.message || 'Error de conexión. Inténtalo de nuevo.';
         }
-      }, 1500);
+      });
     } else {
       this.markFormGroupTouched();
     }
@@ -90,8 +97,7 @@ export class LoginComponent implements OnInit {
   }
 
   goToRegister(): void {
-    // Por ahora redirige al dashboard, puedes crear un componente de registro después
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/register']);
   }
 
   goBack(): void {

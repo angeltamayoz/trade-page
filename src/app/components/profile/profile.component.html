@@ -1,0 +1,203 @@
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white mb-0">Mi Perfil</h2>
+        <button class="btn btn-outline-light" routerLink="/dashboard">
+          <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
+        </button>
+      </div>
+
+      <div class="row">
+        <!-- Información del Usuario -->
+        <div class="col-lg-4 mb-4">
+          <div class="card bg-dark border-secondary">
+            <div class="card-body text-center">
+              <div class="user-avatar-large mb-3">
+                {{ getUserInitials() }}
+              </div>
+              <h5 class="text-white mb-1">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h5>
+              <p class="text-muted mb-2">{{ currentUser?.email }}</p>
+              <span class="badge bg-success mb-3">
+                <i class="fas fa-check-circle me-1"></i>
+                {{ currentUser?.isVerified ? 'Verificado' : 'No Verificado' }}
+              </span>
+              <p class="text-muted small">
+                Miembro desde: {{ currentUser?.createdAt | date:'dd/MM/yyyy' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Estadísticas del Usuario -->
+          <div class="card bg-dark border-secondary mt-4">
+            <div class="card-header">
+              <h6 class="text-white mb-0">Estadísticas de Cuenta</h6>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6 mb-3">
+                  <div class="text-success h4 mb-1">$10,001.00</div>
+                  <small class="text-muted">Balance Total</small>
+                </div>
+                <div class="col-6 mb-3">
+                  <div class="text-info h4 mb-1">15</div>
+                  <small class="text-muted">Operaciones</small>
+                </div>
+                <div class="col-6">
+                  <div class="text-warning h4 mb-1">85%</div>
+                  <small class="text-muted">Éxito</small>
+                </div>
+                <div class="col-6">
+                  <div class="text-primary h4 mb-1">$500.00</div>
+                  <small class="text-muted">Ganancia</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de Perfil -->
+        <div class="col-lg-8">
+          <div class="card bg-dark border-secondary">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h6 class="text-white mb-0">Información Personal</h6>
+              <button class="btn btn-outline-primary btn-sm" (click)="toggleEdit()" *ngIf="!isEditing">
+                <i class="fas fa-edit me-1"></i>Editar
+              </button>
+            </div>
+            <div class="card-body">
+              <!-- Mensajes de estado -->
+              <div class="alert alert-success" *ngIf="successMessage" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
+              </div>
+              <div class="alert alert-danger" *ngIf="errorMessage" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ errorMessage }}
+              </div>
+
+              <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                  <!-- Información Básica -->
+                  <div class="col-md-6 mb-3">
+                    <label for="firstName" class="form-label text-white">Nombre *</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="firstName"
+                      formControlName="firstName"
+                      [readonly]="!isEditing"
+                      [class.is-invalid]="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched">
+                    <div class="invalid-feedback">
+                      {{ getErrorMessage('firstName') }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="lastName" class="form-label text-white">Apellido *</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="lastName"
+                      formControlName="lastName"
+                      [readonly]="!isEditing"
+                      [class.is-invalid]="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched">
+                    <div class="invalid-feedback">
+                      {{ getErrorMessage('lastName') }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label text-white">Email *</label>
+                    <input 
+                      type="email" 
+                      class="form-control" 
+                      id="email"
+                      formControlName="email"
+                      readonly
+                      title="El email no se puede modificar">
+                    <small class="text-muted">El email no se puede modificar</small>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="phone" class="form-label text-white">Teléfono</label>
+                    <input 
+                      type="tel" 
+                      class="form-control" 
+                      id="phone"
+                      formControlName="phone"
+                      [readonly]="!isEditing"
+                      [class.is-invalid]="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">
+                    <div class="invalid-feedback">
+                      {{ getErrorMessage('phone') }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="dateOfBirth" class="form-label text-white">Fecha de Nacimiento</label>
+                    <input 
+                      type="date" 
+                      class="form-control" 
+                      id="dateOfBirth"
+                      formControlName="dateOfBirth"
+                      [readonly]="!isEditing">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="country" class="form-label text-white">País</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="country"
+                      formControlName="country"
+                      [readonly]="!isEditing">
+                  </div>
+
+                  <div class="col-12 mb-3">
+                    <label for="address" class="form-label text-white">Dirección</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="address"
+                      formControlName="address"
+                      [readonly]="!isEditing">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="city" class="form-label text-white">Ciudad</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="city"
+                      formControlName="city"
+                      [readonly]="!isEditing">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="zipCode" class="form-label text-white">Código Postal</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="zipCode"
+                      formControlName="zipCode"
+                      [readonly]="!isEditing">
+                  </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="d-flex gap-2 mt-4" *ngIf="isEditing">
+                  <button type="submit" class="btn btn-success" [disabled]="isLoading || profileForm.invalid">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+                    <i class="fas fa-save me-1" *ngIf="!isLoading"></i>
+                    {{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary" (click)="toggleEdit()" [disabled]="isLoading">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,7 +16,7 @@
         <!-- Desktop Actions -->
         <div class="desktop-actions">
           <button class="btn-secondary" routerLink="/login">Iniciar sesión</button>
-          <button class="btn-primary" routerLink="/login">Abrir cuenta</button>
+          <button class="btn-primary" routerLink="/register">Abrir cuenta</button>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -34,7 +34,7 @@
         <a (click)="scrollToSection('contacto'); toggleMobileMenu(); $event.preventDefault()">Contacto</a>
         <div class="mobile-actions">
           <button class="btn-secondary" routerLink="/login">Iniciar sesión</button>
-          <button class="btn-primary" routerLink="/login">Abrir cuenta</button>
+          <button class="btn-primary" routerLink="/register">Abrir cuenta</button>
         </div>
       </nav>
     </div>
@@ -110,7 +110,7 @@
                 </h3>
                 <p>{{account.description}}</p>
                 <div class="account-actions">
-                  <button class="btn-primary" routerLink="/login">Abrir cuenta</button>
+                  <button class="btn-primary" routerLink="/register">Abrir cuenta</button>
                   <button class="btn-outline">Obtener más</button>
                 </div>
               </div>
